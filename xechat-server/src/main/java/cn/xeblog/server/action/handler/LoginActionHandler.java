@@ -80,6 +80,8 @@ public class LoginActionHandler implements ActionHandler<LoginDTO> {
         String id = ChannelAction.getId(ctx);
         final String ip = IpUtil.getIpByCtx(ctx);
         final IpRegion ipRegion = IpUtil.getRegionByIp(ip);
+        log.info("---> 鱼友【{}】通过 {}（归属地：{}）登录...", username, ip, ipRegion);
+
         String configToken = ServerConfig.getConfig().getToken();
         boolean isAdmin = StrUtil.isNotBlank(configToken) && StrUtil.equals(configToken, body.getToken());
         User user = new User(id, username, body.getStatus(), ip, ipRegion, ctx.channel());

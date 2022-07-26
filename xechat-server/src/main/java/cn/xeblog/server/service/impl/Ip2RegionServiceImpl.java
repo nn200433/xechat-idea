@@ -54,8 +54,6 @@ public class Ip2RegionServiceImpl extends AbstractIpRegionService implements IpR
                 throw new RuntimeException("解析地理位置异常");
             }
 
-            log.debug("---> ip = {} 结果 = {}", ip, region);
-
             // 解析装入实体类
             ipRegion = IpRegion.builder()
                     .ip(ip)
