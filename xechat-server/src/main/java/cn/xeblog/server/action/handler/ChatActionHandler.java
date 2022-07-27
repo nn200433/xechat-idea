@@ -35,10 +35,30 @@ public class ChatActionHandler extends AbstractActionHandler<UserMsgDTO> {
      */
     private static final TimedCache<String, String> TIMED_CACHE = CacheUtil.newTimedCache(300000);
 
+    private static final String SHUT_UP_COMMAND = "大封印术：封印鱼塘";
+
+    private static final String SAY_COMMAND = "大封印术：解封鱼塘";
+
+    /**
+     * 是否闭嘴
+     */
+    private boolean isShutUp = false;
+
     @Override
     protected void process(User user, UserMsgDTO body) {
+        final boolean isAdmin = User.Role.ADMIN == user.getRole();
+        if (!isAdmin && isShutUp) {
+            user.send(ResponseBuilder.build(null, "鱼塘已封印", MessageType.SYSTEM));
+            return;
+        }
         if (body.getMsgType() == UserMsgDTO.MsgType.TEXT) {
             String msg = Convert.toStr(body.getContent());
+            if (isAdmin && StrUtil.equals(SHUT_UP_COMMAND, msg)) {
+                isShutUp = true;
+            }
+            if (isAdmin && StrUtil.equals(SAY_COMMAND, msg)) {
+                isShutUp = false;
+            }
             BaiDuFyUtil baiDuFyUtil = Singleton.get(BaiDuFyUtil.class.getName(), () -> new BaiDuFyUtil("", ""));
             body.setContent(baiDuFyUtil.translate(SensitiveWordUtils.loveChina(msg)));
         } else if (body.getMsgType() == UserMsgDTO.MsgType.IMAGE) {
