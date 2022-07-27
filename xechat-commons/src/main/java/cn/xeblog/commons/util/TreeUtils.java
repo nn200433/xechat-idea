@@ -1,50 +1,44 @@
 package cn.xeblog.commons.util;
 
 import cn.hutool.core.lang.Opt;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * 服务器工具类
+ * 目录树生成工具类
  *
  * @author nn200433
  * @date 2022-07-12 012 08:10:36
  */
 public class TreeUtils {
 
-    public static void main(String args[]) {
-        // String path = "E:\\workspace\\Regex";
-        // String path = "E:\\workspace_web\\app17a";
-        // 通过剪贴板读入目录
-        // String path =SysClipboardUtil.getSysClipboardText();
-        // 使用当前目录作为目录
-        String path = "E:\\下载\\监测项";
-        // 保存根目录,后续要用到
-        // mavenJaveWebFileNameFilter = new MavenJavaWebFileNameFilter(path);
-        File dir = new File(path);
-        printTreeDir(dir);
-        // printTreeFileAndDir(dir, null);
+    /**
+     * 获取目录树
+     *
+     * @param dir 目录
+     * @return {@link String }
+     * @author nn200433
+     */
+    public static String getTreeDir(File dir) {
+        StringBuffer treeBuffer = new StringBuffer();
+        // 打印根目录
+        treeBuffer.append(dir.getName()).append(StrUtil.CRLF);
+        getTreeDir(dir, "", 0, treeBuffer);
+        return treeBuffer.toString();
     }
 
     /**
-     * 打印dir表示的目录的目录树.
+     * 获取目录树
      *
-     * @param dir 表示目录的File对象.
+     * @param dir        目录
+     * @param prefix     前缀
+     * @param deep       深度
+     * @param treeBuffer 目录树保存文本
+     * @author nn200433
      */
-    public static void printTreeDir(File dir) {
-        System.out.println(dir.getAbsolutePath());
-        printTreeDir(dir, "", 0);
-    }
-
-    /**
-     * 打印目录树
-     *
-     * @param dir
-     * @param prefix
-     * @param deep
-     */
-    private static void printTreeDir(File dir, String prefix, int deep) {
+    private static void getTreeDir(File dir, String prefix, int deep, StringBuffer treeBuffer) {
         if (dir.isDirectory()) {
             // 生成目录下的子目录列表
             File[] dirList = dir.listFiles(new FilenameFilter() {
@@ -73,33 +67,41 @@ public class TreeUtils {
                         nextPrefix = prefix + "  ";
                     }
                 }
-                System.out.println(thisPrefix + " " + dirList[i].getName());
-                printTreeDir(dirList[i], nextPrefix, deep + 1);
+                treeBuffer.append(thisPrefix + " " + dirList[i].getName()).append(StrUtil.CRLF);
+                getTreeDir(dirList[i], nextPrefix, deep + 1, treeBuffer);
             }
         }
     }
 
 
     /**
-     * 打印文件跟目录
+     * 获取目录树跟文件
      *
-     * @param dir
-     * @param fileNameFilter
+     * @param dir            目录
+     * @param fileNameFilter 文件名过滤器
+     * @return {@link String }
+     * @author nn200433
      */
-    public static void printTreeFileAndDir(File dir, FilenameFilter fileNameFilter) {
+    public static String getTreeFileAndDir(File dir, FilenameFilter fileNameFilter) {
+        StringBuffer treeBuffer = new StringBuffer();
         // 打印根目录
-        System.out.println(dir.getAbsolutePath());
-        printTreeFileAndDir(dir, fileNameFilter, "", 0);
+        treeBuffer.append(dir.getName()).append(StrUtil.CRLF);
+        getTreeFileAndDir(dir, fileNameFilter, "", 0, treeBuffer);
+        return treeBuffer.toString();
     }
 
     /**
-     * 打印目录树
+     * 获取目录树跟文件
      *
-     * @param dir    目录
-     * @param prefix 前缀,需要打印在文件或者目录之前
-     * @param deep   深度
+     * @param dir            目录
+     * @param fileNameFilter 文件名过滤器
+     * @param prefix         前缀
+     * @param deep           深度
+     * @param treeBuffer     目录树保存文本
+     * @author nn200433
      */
-    private static void printTreeFileAndDir(File dir, FilenameFilter fileNameFilter, String prefix, int deep) {
+    private static void getTreeFileAndDir(File dir, FilenameFilter fileNameFilter, String prefix, int deep,
+                                          StringBuffer treeBuffer) {
         // 列出目录下的子目录
         File[] childs = dir.listFiles(Opt.ofNullable(fileNameFilter).orElse(new DefaultFileNameFilter()));
         // 遍历子目录
@@ -118,10 +120,9 @@ public class TreeUtils {
                     nextPrefix = prefix + "  ";
                 }
             }
-            System.out.println(thisPrefix + " " + childs[i].getName());
+            treeBuffer.append(thisPrefix + " " + childs[i].getName()).append(StrUtil.CRLF);
             if (childs[i].isDirectory()) {
-                printTreeFileAndDir(childs[i], fileNameFilter, nextPrefix,
-                        deep + 1);
+                getTreeFileAndDir(childs[i], fileNameFilter, nextPrefix, deep + 1, treeBuffer);
             }
         }
     }
