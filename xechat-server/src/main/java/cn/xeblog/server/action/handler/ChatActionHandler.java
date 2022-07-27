@@ -48,6 +48,9 @@ public class ChatActionHandler extends AbstractActionHandler<UserMsgDTO> {
     protected void process(User user, UserMsgDTO body) {
         final boolean isAdmin = User.Role.ADMIN == user.getRole();
         if (!isAdmin && isShutUp) {
+            if (body.getMsgType() == UserMsgDTO.MsgType.TEXT) {
+                log.info("封印鱼塘，{} 被拒绝发言：{}", user.getUsername(), Convert.toStr(body.getContent()));
+            }
             user.send(ResponseBuilder.build(null, "鱼塘已封印", MessageType.SYSTEM));
             return;
         }
