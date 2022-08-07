@@ -1,7 +1,7 @@
 package cn.xeblog.plugin.game;
 
-import cn.xeblog.commons.entity.game.GameRoom;
 import cn.xeblog.commons.entity.User;
+import cn.xeblog.commons.entity.game.GameRoom;
 
 /**
  * @author anlingyi
@@ -62,6 +62,13 @@ public interface GameRoomEventHandler {
      * @param gameRoom
      */
     void gameStarted(GameRoom gameRoom);
+
+    /**
+     * 玩家游戏已开始
+     *
+     * @param user
+     */
+    void playerGameStarted(User user);
 
     /**
      * 游戏已结束

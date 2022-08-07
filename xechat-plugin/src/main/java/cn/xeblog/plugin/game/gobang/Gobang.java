@@ -1,13 +1,12 @@
 package cn.xeblog.plugin.game.gobang;
 
 import cn.hutool.core.thread.GlobalThreadPool;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.xeblog.commons.entity.User;
+import cn.xeblog.commons.entity.game.gobang.GobangDTO;
 import cn.xeblog.commons.enums.Game;
 import cn.xeblog.plugin.action.ConsoleAction;
 import cn.xeblog.plugin.action.GameAction;
-import cn.xeblog.commons.entity.game.gobang.GobangDTO;
 import cn.xeblog.plugin.annotation.DoGame;
 import cn.xeblog.plugin.cache.DataCache;
 import cn.xeblog.plugin.game.AbstractGame;
@@ -24,8 +23,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * 五子棋
@@ -242,7 +241,7 @@ public class Gobang extends AbstractGame<GobangDTO> {
         } else {
             put = true;
             gameMode = GameMode.ONLINE;
-            gameRoom.getUsers().forEach((k, v) -> {
+            getRoom().getUsers().forEach((k, v) -> {
                 if (!v.getUsername().equals(player)) {
                     nextPlayer = v.getUsername();
                     return;
@@ -859,7 +858,15 @@ public class Gobang extends AbstractGame<GobangDTO> {
     protected void start() {
         border = 14;
         initChessPanel();
-        if (isHomeowner) {
+
+        if (getRoom() == null) {
+            allPlayersGameStarted();
+        }
+    }
+
+    @Override
+    protected void allPlayersGameStarted() {
+        if (isHomeowner()) {
             // 自旋等待一段时间，再发送游戏数据
             invoke(() -> {
                 int randomType = new Random().nextInt(2) + 1;
@@ -867,7 +874,7 @@ public class Gobang extends AbstractGame<GobangDTO> {
                 msg.setType(3 - randomType);
                 sendMsg(msg);
                 handle(new GobangDTO(0, 0, randomType));
-            }, 1200);
+            }, 500);
         }
     }
 

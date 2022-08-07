@@ -1,6 +1,7 @@
 package cn.xeblog.server.action.handler;
 
-import cn.xeblog.commons.entity.*;
+import cn.xeblog.commons.entity.Response;
+import cn.xeblog.commons.entity.User;
 import cn.xeblog.commons.entity.game.GameInviteDTO;
 import cn.xeblog.commons.entity.game.GameInviteResultDTO;
 import cn.xeblog.commons.entity.game.GameRoom;
@@ -52,6 +53,9 @@ public class GameRoomActionHandler extends AbstractGameActionHandler<GameRoomMsg
                 break;
             case GAME_OVER:
                 user.send(ResponseBuilder.build(user, body, MessageType.GAME_ROOM));
+                break;
+            case PLAYER_GAME_STARTED:
+                gameRoom.getHomeowner().send(ResponseBuilder.build(user, body, MessageType.GAME_ROOM));
                 break;
         }
     }

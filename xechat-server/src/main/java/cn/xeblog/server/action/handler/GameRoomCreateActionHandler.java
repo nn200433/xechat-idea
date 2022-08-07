@@ -1,9 +1,9 @@
 package cn.xeblog.server.action.handler;
 
 import cn.xeblog.commons.entity.Response;
+import cn.xeblog.commons.entity.User;
 import cn.xeblog.commons.entity.game.CreateGameRoomDTO;
 import cn.xeblog.commons.entity.game.GameRoom;
-import cn.xeblog.commons.entity.User;
 import cn.xeblog.commons.enums.Action;
 import cn.xeblog.commons.enums.MessageType;
 import cn.xeblog.server.annotation.DoAction;
@@ -35,6 +35,7 @@ public class GameRoomCreateActionHandler extends AbstractActionHandler<CreateGam
 
         gameRoom.setGame(body.getGame());
         gameRoom.setNums(body.getNums());
+        gameRoom.setGameMode(body.getGameMode());
         gameRoom.setHomeowner(user);
         GameRoomCache.joinRoom(roomId, user);
         user.send(response);

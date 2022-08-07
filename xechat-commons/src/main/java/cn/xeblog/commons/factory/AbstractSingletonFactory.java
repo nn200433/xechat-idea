@@ -2,7 +2,6 @@ package cn.xeblog.commons.factory;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.ClassUtil;
 import cn.xeblog.commons.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -55,12 +54,7 @@ public abstract class AbstractSingletonFactory<K, V> {
 
         public void addByAnnotation(String packageName, Class<? extends Annotation> annotationClass) {
             Set<Class<?>> classes;
-            if (this.jarPath == null) {
-                classes = ClassUtil.scanPackageByAnnotation(packageName, annotationClass);
-            } else {
-                classes = ClassUtils.scan(this.jarPath, packageName, annotationClass);
-            }
-
+            classes = ClassUtils.scan(this.jarPath, packageName, annotationClass);
             if (!CollectionUtil.isEmpty(classes)) {
                 classes.forEach(clazz -> {
                     add(AnnotationUtil.getAnnotationValue(clazz, annotationClass), (Class<? extends V>) clazz);

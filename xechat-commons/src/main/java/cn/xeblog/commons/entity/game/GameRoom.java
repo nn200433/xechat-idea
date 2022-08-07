@@ -7,7 +7,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author anlingyi
@@ -30,6 +33,11 @@ public class GameRoom implements Serializable {
      * 几人房
      */
     private int nums;
+
+    /**
+     * 游戏模式
+     */
+    private String gameMode;
 
     /**
      * 房主
