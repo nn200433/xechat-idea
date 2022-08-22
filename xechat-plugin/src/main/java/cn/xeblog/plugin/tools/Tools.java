@@ -11,7 +11,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Tools {
     READ("阅读", false),
-    TREE("项目结构树", false);
+    BROWSER("浏览器", false);
 
     /**
      * 工具名称

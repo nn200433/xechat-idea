@@ -5,12 +5,12 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.xeblog.commons.entity.OnlineServer;
+import cn.xeblog.commons.util.ParamsUtils;
 import cn.xeblog.plugin.action.ConnectionAction;
 import cn.xeblog.plugin.action.ConsoleAction;
 import cn.xeblog.plugin.annotation.DoCommand;
 import cn.xeblog.plugin.cache.DataCache;
 import cn.xeblog.plugin.enums.Command;
-import cn.xeblog.commons.util.ParamsUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -78,12 +78,13 @@ public class LoginCommandHandler extends AbstractCommandHandler {
                 username = name;
             }
         }
-        username = StrUtil.trim(username);
 
         if (StringUtils.isBlank(username)) {
             ConsoleAction.showSimpleMsg("用户名不能为空！");
             return;
         }
+
+        username = username.replaceAll("\\s*|\t|\r|\n", "");
         if (username.length() > 12) {
             ConsoleAction.showSimpleMsg("用户名长度不能超过12个字符！");
             return;
